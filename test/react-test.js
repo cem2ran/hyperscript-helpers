@@ -1,9 +1,11 @@
 const assert = require('assert');
 const React = require('react');
-const helpers = require('../dist/index')(React.createElement);
+const hh = require('../dist/index');
+const helpers = hh.helpers(React.createElement);
+const TAG_NAMES = require('../src/tag_names.json');
 const div = helpers.div;
 const jsc = require('jsverify');
-const _ = require('lodash')
+const _ = require('lodash');
 
 describe('div', function(){
   jsc.property('div() ≡ React.createElement("div")', function(){
@@ -29,7 +31,7 @@ describe('div', function(){
   });
 });
 
-var tagArb = jsc.elements(helpers.TAG_NAMES);
+var tagArb = jsc.elements(TAG_NAMES);
 
 describe('arbitrary tag', function(){
   jsc.property('tag() ≡ React.createElement("tag")', tagArb, function(tag){
@@ -57,18 +59,18 @@ describe('arbitrary tag', function(){
 
 describe('isSelector', function() {
   jsc.property('isSelector(".<any>") ≡ true', "string", function(string) {
-    return helpers.isSelector('.' + string);
+    return hh.isSelector('.' + string);
   });
 
   jsc.property('isSelector("#<any>") ≡ true', "string", function(string) {
-    return helpers.isSelector('#' + string);
+    return hh.isSelector('#' + string);
   });
 
   jsc.property('isSelector("^[.#]<any>") ≡ false', "nestring", function(string) {
     const startingWith =
       string.indexOf('.') === 0
       || string.indexOf('#') === 0;
-    return startingWith || !helpers.isSelector(string);
+    return startingWith || !hh.isSelector(string);
   });
 });
 

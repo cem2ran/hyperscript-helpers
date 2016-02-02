@@ -4,7 +4,7 @@
 
 Terse syntax for hyperscript.
 
-> Less than 50 lines of code, taking your hyperscripting to the next level.
+> Less than 30 lines of code, taking your hyperscripting to the next level.
 
 ## What is it
 

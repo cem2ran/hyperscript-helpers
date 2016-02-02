@@ -1,5 +1,3 @@
-// use of any is because of differences between
-// different libraries h() functions
 declare interface HyperScriptHelperFn {
   (selector?: any, properties?: any, children?: any): any;
 }

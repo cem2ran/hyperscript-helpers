@@ -1,6 +1,8 @@
 const assert = require('assert');
 const h = require('hyperscript');
-const helpers = require('../dist/index')(h);
+const hh = require('../dist/index');
+const helpers = hh.helpers(h);
+const TAG_NAMES = require('../src/tag_names.json');
 const div = helpers.div;
 const jsc = require('jsverify');
 const _ = require('lodash');
@@ -29,7 +31,7 @@ describe('div', function(){
   });
 });
 
-var tagArb = jsc.elements(helpers.TAG_NAMES);
+var tagArb = jsc.elements(TAG_NAMES);
 
 describe('arbitrary tag', function(){
   jsc.property('tag() ≡ h("tag")', tagArb, function(tag){
@@ -65,24 +67,24 @@ var tagCustom = jsc.number(1, 20).smap(function(size) {
 
 describe('custom tag', function(){
   jsc.property('tag() ≡ h("tag")', tagCustom, function(tagName){
-    return _.isEqual(h(tagName).nodeName, helpers.createTag(tagName)().nodeName);
+    return _.isEqual(h(tagName).nodeName, helpers[tagName]().nodeName);
   });
 
   jsc.property('div(attrs) ≡ h("div", attrs)', tagCustom, "dict string", function(tagName, attrs){
     const hr = h(tagName, attrs);
-    const divr = helpers.createTag(tagName)(attrs);
+    const divr = helpers[tagName](attrs);
     return jsc.utils.isApproxEqual(hr, divr);
   });
 
   jsc.property('div(children) ≡ h("div", children)', tagCustom, "array string", function (tagName, children){
     const hr = h(tagName, children);
-    const divr = helpers.createTag(tagName)(children);
+    const divr = helpers[tagName](children);
     return jsc.utils.isApproxEqual(hr, divr);
   });
 
   jsc.property('div(attrs, children) ≡ h("div", attrs, children)', tagCustom, "dict string", "array string", function(tagName, attrs, children) {
     const hr = h(tagName, attrs, children);
-    const divr = helpers.createTag(tagName)(attrs, children);
+    const divr = helpers[tagName](attrs, children);
     return jsc.utils.isApproxEqual(hr, divr);
   });
 });
@@ -90,18 +92,18 @@ describe('custom tag', function(){
 
 describe('isSelector', function() {
   jsc.property('isSelector(".<any>") ≡ true', "string", function(string) {
-    return helpers.isSelector('.' + string);
+    return hh.isSelector('.' + string);
   });
 
   jsc.property('isSelector("#<any>") ≡ true', "string", function(string) {
-    return helpers.isSelector('#' + string);
+    return hh.isSelector('#' + string);
   });
 
   jsc.property('isSelector("^[.#]<any>") ≡ false', "nestring", function(string) {
     const startingWith =
       string.indexOf('.') === 0
       || string.indexOf('#') === 0;
-    return startingWith || !helpers.isSelector(string);
+    return startingWith || !hh.isSelector(string);
   });
 });
 

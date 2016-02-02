@@ -1,7 +1,5 @@
 import fs from 'fs';
-import hh from './src/index';
-
-const { TAG_NAMES } = hh();
+import TAG_NAMES from './src/tag_names.json'
 
 const start =
 `declare interface HyperScriptHelperFn {
